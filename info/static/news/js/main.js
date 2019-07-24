@@ -173,22 +173,24 @@ $(function(){
         "password": password,
     }
 
-    $.ajax({
-        url:"/passport/register",
-        type: "post",
-        data: JSON.stringify(params),
-        contentType: "application/json",
-        success: function (resp) {
-            if (resp.errno == "0"){
-                // 刷新当前界面
-                location.reload()
-            }else {
-                $("#register-password-err").html(resp.errmsg)
-                $("#register-password-err").show()
-            }
+$.ajax({
+    url:"/passport/register",
+    type: "post",
+    headers: {
+        "X-CSRFToken": getCookie("csrf_token")
+    },
+    data: JSON.stringify(params),
+    contentType: "application/json",
+    success: function (resp) {
+        if (resp.errno == "0"){
+            // 刷新当前界面
+        location.reload()
+        }else {
+            $("#register-password-err").html(resp.errmsg)
+            $("#register-password-err").show()
         }
-    })
-
+    }
+})
     })
 })
 
