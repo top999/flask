@@ -1,8 +1,9 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask
+
 # 可以用来指定 session 保存的位置
+from flask import Flask, app
 from flask_wtf import CSRFProtect
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -63,4 +64,10 @@ def create_app(config_name):
     from .modules.passport import passport_blu
     app.register_blueprint(passport_blu)
 
+    # 注册自定义过滤器
+    from info.utils.common import do_index_class
+    app.add_template_filter(do_index_class, "indexClass")
+
     return app
+
+
