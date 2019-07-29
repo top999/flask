@@ -1,7 +1,8 @@
-from flask import session, jsonify, current_app, render_template, request
+from flask import session, jsonify, current_app, render_template, request, g
 
 from info.models import User, News, Category
 from info.utils import constants
+from info.utils.common import user_login_data
 from info.utils.response_code import RET
 from . import index_blu
 
@@ -9,16 +10,19 @@ from . import index_blu
 # 测试
 
 @index_blu.route('/')
+@user_login_data
 def index():
     # 获取到当前登录用户的id
-    user_id= session.get('user_id')
-    # print(user_id)
-    user =None
-    if user_id:
-        try:
-            user = User.query.get(user_id)
-        except Exception as e:
-            return jsonify(erron=RET.DBERR)
+    # user_id = session.get('user_id', None)
+    # user = None
+    # if user_id:
+    #     try:
+    #         user = User.query.get(user_id)
+    #     except Exception as e:
+    #         current_app.logger.error(e)
+
+    # 使用g变量获取用户登陆信息
+    user = g.user
 
     # 获取到当前登录用户的id
     user_id = session.get('user_id')
@@ -54,7 +58,7 @@ def index():
         "categories":categories,
     }
     # 返回数据
-    return render_template("new/index.html",data = data)
+    return render_template("news/index.html",data = data)
 
 
 @index_blu.route('/news_list')
@@ -68,7 +72,7 @@ def news_list():
     try:
         cid = int(request.args.get('cid', "1"))
         page = int(request.args.get('page', "1"))
-        print(cid,page)
+        # print(cid,page)
     except:
         data = {
             'current_page': 1,

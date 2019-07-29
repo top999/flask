@@ -13,7 +13,7 @@ from redis import StrictRedis
 from config import config
 
 # 初始化数据库
-db = SQLAlchemy()
+db: db = SQLAlchemy()
 
 # 变量注释,指定变量类型(使用全局变量无法智能提示时)
 redis_store = None  # type: StrictRedis
@@ -64,9 +64,12 @@ def create_app(config_name):
     from .modules.passport import passport_blu
     app.register_blueprint(passport_blu)
 
+    from .modules.news import news_detail
+    app.register_blueprint(news_detail)
+
     # 注册自定义过滤器
     from info.utils.common import do_index_class
-    app.add_template_filter(do_index_class, "indexClass")
+    app.add_template_filter(do_index_class, "index_class")
 
     return app
 
