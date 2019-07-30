@@ -64,8 +64,8 @@ def create_app(config_name):
     from .modules.passport import passport_blu
     app.register_blueprint(passport_blu)
 
-    from .modules.news import news_detail
-    app.register_blueprint(news_detail)
+    from .modules.news import news_blu
+    app.register_blueprint(news_blu)
 
     # 注册自定义过滤器
     from info.utils.common import do_index_class

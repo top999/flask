@@ -55,7 +55,7 @@ def index():
     data = {
         "user":user,
         "news_dict":clicks_news_li,
-        "categories":categories,
+        "category_list":categories,
     }
     # 返回数据
     return render_template("news/index.html",data = data)
@@ -69,38 +69,34 @@ def news_list():
     """
 
     # 1. 获取参数,并指定默认为最新分类,第一页,一页显示10条数据
-    try:
-        cid = int(request.args.get('cid', "1"))
-        page = int(request.args.get('page', "1"))
-        # print(cid,page)
-    except:
-        data = {
-            'current_page': 1,
-            'total_page': 1,
-            'news_dict_list': [],
-        }
-        return jsonify( data = data,errno=RET.PARAMERR, errmsg="参数类型异常")
+    cid = request.args.get('cid', 1)
+    page = request.args.get('page', 1)
+
 
     # 2. 校验参数
     if not all([cid, page]):
         return jsonify(errno=RET.PARAMERR, errmsg='请输入参数')
-    filter = [News.status == 0]
+
+    try:
+        cid = int(cid)
+        page = int(page)
+    except BaseException as e:
+        current_app.logger.error(e)
+    filter_list = [News.status == 0]
+
     if cid != 1:
-        filter.append(News.category_id == cid)
+        filter_list.append(News.category_id == cid)
 
     # 3. 查询数据
-    paginate = News.query.order_by(News.create_time.desc()).paginate(page, constants.HOME_PAGE_MAX_NEWS, False)
-    items = paginate.items
-    current_page = paginate.page
-    total_page = paginate.pages
-    # 将模型对象列表转成字典列表
-    news_dict_list =[]
-    for item in items:
-        news_dict_list.append(item.to_dict())
+    pn = []
+    try:
+        pn = News.query.filter(*filter_list).order_by(News.create_time.desc()).paginate(page, constants.HOME_PAGE_MAX_NEWS)
+    except BaseException as e:
+        current_app.logger.error(e)
     data = {
-        'categories':current_page,
-        'total_page':total_page,
-        'news_dict_list':news_dict_list,
+        "news_dict_list": [news.to_dict() for news in pn.items],
+        "total_page": pn.pages,
+        "cur_page":pn.page,
     }
-    #返回数据
+
     return jsonify(errno = RET.OK,errmsg = 'OK',data = data)
