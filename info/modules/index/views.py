@@ -62,7 +62,7 @@ def index():
 
 
 @index_blu.route('/news_list')
-def news_list():
+def news_list(category_id=None):
     """
     获取首页新闻数据
     :return:
@@ -86,8 +86,16 @@ def news_list():
 
     if cid != 1:
         filter_list.append(News.category_id == cid)
+        
+        
+    # 3. 查询数据并分页
+    
+    filters = [News.status == 0]
+    # 如果分类id不为0，那么添加分类id的过滤
+    if category_id != "0":
+        filters.append(News.category_id == category_id)
 
-    # 3. 查询数据
+    # 4. 查询数据
     pn = []
     try:
         pn = News.query.filter(*filter_list).order_by(News.create_time.desc()).paginate(page, constants.HOME_PAGE_MAX_NEWS)

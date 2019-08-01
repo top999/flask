@@ -131,8 +131,8 @@ def login():
     # 3. 校验密码
     if not user:
         return jsonify(errno=RET.NODATA, errmsg='没有此账号, 请先注册')
-    # if not user.check_password(password):
-    #     return jsonify(errno=RET.PWDERR, errmsg='请输入正确的密码')
+    if not user.check_password(password):
+        return jsonify(errno=RET.PWDERR, errmsg='请输入正确的密码')
     # 4. 保存用户登录状态
     session['user_id'] = user.id
     session['user_name'] = user.nick_name
