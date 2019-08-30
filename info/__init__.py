@@ -56,7 +56,7 @@ def create_app(config_name):
     @user_login_data
     def page_not_found(_):
         user = g.user
-        data = {"user": user.to_dict() if user else None}
+        data = {"profile": user.to_dict() if user else None}
         return render_template('news/404.html', data=data)
 
 

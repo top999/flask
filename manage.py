@@ -15,12 +15,6 @@ manager = Manager(app)
 Migrate(app, db)
 # 将迁移命令添加到manager中
 manager.add_command('db', MigrateCommand)
-
-if __name__ == '__main__':
-    manager.run()
-
-
-
 # 通过命令行创建管理员账号
 @manager.option('-n', '-name', dest="name")
 @manager.option('-p', '-password', dest="password")
@@ -42,3 +36,8 @@ def createsuperuser(name, password):
         print(e)
 
     print("添加成功")
+if __name__ == '__main__':
+    manager.run()
+
+
+

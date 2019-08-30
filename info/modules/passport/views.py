@@ -43,7 +43,7 @@ def send_sms_code():
     """
     # 1.将前端参数转为字典
     mobile = request.json.get('mobile')
-    print(mobile)
+    # print(mobile)
     image_code = request.json.get('image_code')
     image_code_id = request.json.get('image_code_id')
     # 2. 校验参数(参数是否符合规则，判断是否有值)

@@ -166,6 +166,7 @@ $(function(){
             return;
         }
 
+
         // 发起注册请求
         var params = {
         "mobile": mobile,
@@ -215,6 +216,8 @@ function sendSMSCode() {
     }
 
      // TODO 发送短信验证码
+
+
     var params = {
         'mobile': mobile,
         'image_code': imageCode,

@@ -127,12 +127,8 @@ def user_follow():
 
     for follow_user in follows:
         user_dict_li.append(follow_user.to_dict())
-    data = {"users": user_dict_li,
-            "total_page": total_page,
-            "current_page": current_page
-            }
+    data = {"users": user_dict_li, "total_page": total_page, "current_page": current_page}
     return render_template('news/user_follow.html', data=data)
-
 
 
 @profile_blu.route('/news_list')

@@ -75,7 +75,7 @@ def news_detail(news_id):
     is_followed = False
     comment_list = Comment.query.filter(Comment.news_id == news.id).order_by(Comment.create_time.desc()).all()
     comments = []
-    # print(comment_list)
+    #     # print(comment_list)
     # 判断用户是否收藏过该新闻
     if user:
         if news in user.collection_news:
@@ -87,9 +87,9 @@ def news_detail(news_id):
         for comment in comment_list if comment_list else []:
             comment_dict = comment.to_dict()
             comment_dict['is_like'] = False
-            if comment.id in user_comment_ids:
+            if comment.id in user_comment_ids: 
                 comment_dict['is_like'] = True
-                comment.append(comment_dict)
+            comments.append(comment_dict)
     data = {
         'news_dict': news_click_list,
         'user': user.to_dict() if user else None,
@@ -170,23 +170,23 @@ def add_news_comment():
     if not news:
         return jsonify(errno=RET.NODATA, errmsg="该新闻不存在")
     # 初始化评论模型，保存数据
-    comment = Comment()
-    comment.user_id = user.id
-    comment.news_id = news_id
-    comment.content = comment_str
+    comments = Comment()
+    comments.user_id = user.id
+    comments.news_id = news_id
+    comments.content = comment_str
     if parent_id:
-        comment.parent_id = parent_id
+        comments.parent_id = parent_id
     # 配置文件设置了自动提交,自动提交要在return返回结果以后才执行commit命令,如果有回复
     # 评论,先拿到回复评论id,在手动commit,否则无法获取回复评论内容
     try:
-        db.session.add(comment)
+        db.session.add(comments)
         db.session.commit()
+        print(comments)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="保存评论数据失败")
-
     # 返回响应
-    return jsonify(errno=RET.OK, errmsg="评论成功", data=comment.to_dict())
+    return jsonify(errno=RET.OK, errmsg="评论成功",  data=comments.to_dict())
 
 
 @news_blu.route('/comment_like', methods=["POST"])
@@ -204,10 +204,9 @@ def comment_like():
         return jsonify(errno=RET.PARAMERR, errmsg="用户未登录")
     # 取到请求参数
     comment_id = request.json.get('comment_id')
-    news_id = request.json.get('news_id')
     action = request.json.get('action')
     # 判断参数
-    if not all([comment_id, news_id, action]):
+    if not all([comment_id, action]):
         return jsonify(errno=RET.DBERR, errmsg='查询参数失败')
     if action not in ('add', 'remove'):
         return jsonify(errno=RET.PARAMERR, errmsg='参数错误')

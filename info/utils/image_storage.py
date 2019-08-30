@@ -1,4 +1,5 @@
-from qiniu import Auth, put_data
+# from qiniu import Auth, put_data
+import Auth as Auth
 
 access_key = 'Q3l0L4uo8vTXvLs6UacKg3xHykxxhoZSzmFIlf6w'
 secret_key = 'r8Bn58sGxNz1jcD2HY8tbTEiZwecBOg1eZgDcIB3'

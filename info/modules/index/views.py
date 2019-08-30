@@ -58,7 +58,7 @@ def index():
         "category_list":categories,
     }
     # 返回数据
-    return render_template("news/index.html",data = data)
+    return render_template("news/index.html", data = data)
 
 
 @index_blu.route('/news_list')
